@@ -1,0 +1,75 @@
+############################
+# .NET e ASP.NET Core
+############################
+bin/
+obj/
+out/
+*.dll
+*.exe
+*.app
+*.pdb
+
+############################
+# Visual Studio
+############################
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+############################
+# ASP.NET específico
+############################
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+############################
+# Configurações de build e publish
+############################
+*.publishsettings
+*.dbmdl
+*.bak
+*.sql
+
+############################
+# Configurações locais / cache
+############################
+*.log
+*.tmp
+*.cache
+*.env
+*.local.json
+
+############################
+# Sistema Operacional
+############################
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+
+############################
+# Editor JetBrains Rider (se usado)
+############################
+.idea/
+*.sln.iml
+
+############################
+# VS Code (se usado)
+############################
+.vscode/
+
+############################
+# Arquivos de pacotes NuGet
+############################
+*.nupkg
+*.snupkg
+packages/
+*.nuspec
+
