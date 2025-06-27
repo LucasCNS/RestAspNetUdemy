@@ -1,0 +1,51 @@
+############################
+# .NET e ASP.NET Core
+############################
+bin/
+obj/
+out/
+*.dll
+*.exe
+*.app
+*.pdb
+
+############################
+# Visual Studio
+############################
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+############################
+# ASP.NET específico
+############################
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+############################
+# Configurações de build e publish
+############################
+*.publishsettings
+*.dbmdl
+*.bak
+*.sql
+
+############################
+# Configurações locais / cache
+############################
+*.log
+*.tmp
+*.cache
+*.env
+*.local.json
+
+############################
+# Sistema Operacional
+############################
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop
