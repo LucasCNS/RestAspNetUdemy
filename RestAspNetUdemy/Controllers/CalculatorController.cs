@@ -62,6 +62,22 @@ namespace RestAspNetUdemy.Controllers
 			return Ok(subtraction);
 		}
 
+		[HttpGet("division/{firstNumber}/{secondNumber}")]
+		public IActionResult Division(string firstNumber, string secondNumber)
+		{
+			if (!IsNumeric(firstNumber) || !IsNumeric(secondNumber))
+			{
+				return BadRequest("One or both inputs are not valid numbers.");
+			}
+
+			decimal firstConvertedNumber = ConvertToNumeric(firstNumber);
+			decimal secondConvertedNumber = ConvertToNumeric(secondNumber);
+
+			decimal subtraction = firstConvertedNumber / secondConvertedNumber;
+
+			return Ok(subtraction);
+		}
+
 		private bool IsNumeric(string input)
 		{
 			bool isNumber = decimal.TryParse(input, out _);
