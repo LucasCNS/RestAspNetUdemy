@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 
 namespace RestAspNetUdemy.Controllers
 {
@@ -57,9 +58,9 @@ namespace RestAspNetUdemy.Controllers
 			decimal firstConvertedNumber = ConvertToNumeric(firstNumber);
 			decimal secondConvertedNumber = ConvertToNumeric(secondNumber);
 
-			decimal subtraction = firstConvertedNumber * secondConvertedNumber;
+			decimal multiplication = firstConvertedNumber * secondConvertedNumber;
 
-			return Ok(subtraction);
+			return Ok(multiplication);
 		}
 
 		[HttpGet("division/{firstNumber}/{secondNumber}")]
@@ -73,9 +74,31 @@ namespace RestAspNetUdemy.Controllers
 			decimal firstConvertedNumber = ConvertToNumeric(firstNumber);
 			decimal secondConvertedNumber = ConvertToNumeric(secondNumber);
 
-			decimal subtraction = firstConvertedNumber / secondConvertedNumber;
+			decimal division = firstConvertedNumber / secondConvertedNumber;
 
-			return Ok(subtraction);
+			return Ok(division);
+		}
+
+		[HttpGet("average/{firstNumber}/{secondNumber}/{thirdNumber}")]
+		public IActionResult Average(string firstNumber, string secondNumber, string thirdNumber)
+		{
+			if (!IsNumeric(firstNumber) || !IsNumeric(secondNumber) || !IsNumeric(thirdNumber))
+			{
+				return BadRequest("One or both inputs are not valid numbers.");
+			}
+
+			decimal firstConvertedNumber = ConvertToNumeric(firstNumber);
+			decimal secondConvertedNumber = ConvertToNumeric(secondNumber);
+			decimal thirdConvertedNumber = ConvertToNumeric(thirdNumber);
+
+			MethodInfo methodAverage = typeof(CalculatorController)
+				.GetMethod(nameof(Average));
+
+			int qntNumbers = methodAverage.GetParameters().Length;
+
+			decimal average = firstConvertedNumber + secondConvertedNumber + thirdConvertedNumber / qntNumbers;
+
+			return Ok(average);
 		}
 
 		private bool IsNumeric(string input)
