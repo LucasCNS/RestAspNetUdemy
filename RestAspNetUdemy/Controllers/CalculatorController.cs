@@ -24,13 +24,13 @@ namespace RestAspNetUdemy.Controllers
 				return BadRequest("One or both inputs are not valid numbers.");
 			}
 
-				decimal firstConvertedNumber = ConvertToNumeric(firstNumber);
-				decimal secondConvertedNumber = ConvertToNumeric(secondNumber);
+			decimal firstConvertedNumber = ConvertToNumeric(firstNumber);
+			decimal secondConvertedNumber = ConvertToNumeric(secondNumber);
 
-				decimal sum = firstConvertedNumber + secondConvertedNumber;
+			decimal sum = firstConvertedNumber + secondConvertedNumber;
 
-				return Ok(sum);
-			}
+			return Ok(sum);
+		}
 
 		[HttpGet("subtraction/{firstNumber}/{secondNumber}")]
 		public IActionResult Subtraction(string firstNumber, string secondNumber)
