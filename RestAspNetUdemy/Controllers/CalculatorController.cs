@@ -107,9 +107,9 @@ namespace RestAspNetUdemy.Controllers
 				return BadRequest("One or both inputs are not valid numbers.");
 			}
 
-			double firstConvertedNumber = ConvertToDouble(firstNumber);
+			var firstConvertedNumber = (double)ConvertToNumeric(firstNumber);
 
-			double squareroot = Math.Sqrt(firstConvertedNumber);
+			var squareroot = Math.Sqrt(firstConvertedNumber);
 
 			return Ok(squareroot);
 		}
@@ -124,11 +124,6 @@ namespace RestAspNetUdemy.Controllers
 		private decimal ConvertToNumeric(string input)
 		{
 			return Convert.ToDecimal(input);
-		}
-
-		private double ConvertToDouble(string input)
-		{
-			return Convert.ToDouble(input);
 		}
 	}
 }
