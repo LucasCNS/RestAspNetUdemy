@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 
 namespace RestAspNetUdemy.Controllers
@@ -98,6 +99,21 @@ namespace RestAspNetUdemy.Controllers
 			return Ok(average);
 		}
 
+		[HttpGet("squareroot/{firstNumber}")]
+		public IActionResult Squareroot(string firstNumber)
+		{
+			if (!IsNumeric(firstNumber))
+			{
+				return BadRequest("One or both inputs are not valid numbers.");
+			}
+
+			double firstConvertedNumber = ConvertToDouble(firstNumber);
+
+			double squareroot = Math.Sqrt(firstConvertedNumber);
+
+			return Ok(squareroot);
+		}
+
 		private bool IsNumeric(string input)
 		{
 			bool isNumber = decimal.TryParse(input, out _);
@@ -108,6 +124,11 @@ namespace RestAspNetUdemy.Controllers
 		private decimal ConvertToNumeric(string input)
 		{
 			return Convert.ToDecimal(input);
+		}
+
+		private double ConvertToDouble(string input)
+		{
+			return Convert.ToDouble(input);
 		}
 	}
 }
