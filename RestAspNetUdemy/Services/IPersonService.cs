@@ -7,7 +7,7 @@ namespace RestAspNetUdemy.Services
 		Person Create(Person person);
 		Person FindById(long id);
 		Person Update(Person person);
-		Person Delete(Person person);
+		void Delete(long id);
 		List<Person> FindAll();
 	}
 }
