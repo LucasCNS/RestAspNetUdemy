@@ -1,13 +1,13 @@
 ﻿using RestAspNetUdemy.Model;
 using RestAspNetUdemy.Model.Context;
 
-namespace RestAspNetUdemy.Services.Implementations
+namespace RestAspNetUdemy.Repository.Implementations
 {
-	public class PersonServiceImplementation : IPersonService
+	public class PersonRepositoryImplementation : IPersonRepository
 	{
 		private MySQLContext _context;
 
-		public PersonServiceImplementation(MySQLContext context)
+		public PersonRepositoryImplementation(MySQLContext context)
 		{
 			_context = context;
 		}
@@ -79,7 +79,7 @@ namespace RestAspNetUdemy.Services.Implementations
 			return person;
 		}
 
-		private bool Exists(long id)
+		public bool Exists(long id)
 		{
 			return _context.People.Any(person => person.Id.Equals(id));
 		}

@@ -1,13 +1,13 @@
 ﻿using RestAspNetUdemy.Model;
 
-namespace RestAspNetUdemy.Services
+namespace RestAspNetUdemy.Business
 {
-	public interface IPersonService
+	public interface IPersonBusiness
 	{
-		Person Create(Person person);
+		List<Person> FindAll();
 		Person FindById(long id);
+		Person Create(Person person);
 		Person Update(Person person);
 		void Delete(long id);
-		List<Person> FindAll();
 	}
 }
