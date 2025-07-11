@@ -1,4 +1,5 @@
-﻿using RestAspNetUdemy.Model;
+﻿using RestAspNetUdemy.Data.Converter.Implementations;
+using RestAspNetUdemy.Model;
 using RestAspNetUdemy.Repository;
 
 namespace RestAspNetUdemy.Business.Implementations
@@ -7,28 +8,45 @@ namespace RestAspNetUdemy.Business.Implementations
 	{
 		private readonly IRepository<Person> _repository;
 
+		private readonly PersonConverter _converter;
+
 		public PersonBusinessImplementation(IRepository<Person> repository)
 		{
 			_repository = repository;
+			_converter = new PersonConverter();
 		}
 
-		public List<Person> FindAll()
+		public List<PersonVO> FindAll()
 		{
-			return _repository.FindAll();
+			var convertedFindAll = _converter.Parse(_repository.FindAll());
+
+			return convertedFindAll;
 		}
 
-		public Person FindById(long id)
+		public PersonVO FindById(long id)
 		{
-			return _repository.FindById(id);
+			var convertedFindById = _converter.Parse(_repository.FindById(id));
+
+			return convertedFindById;
 		}
 
-		public Person Create(Person person)
+		public PersonVO Create(PersonVO person)
 		{
-			return _repository.Create(person);
+			var personEntity = _converter.Parse(person);
+			personEntity = _repository.Create(personEntity);
+
+			var covertedCreate = _converter.Parse(personEntity);
+
+			return covertedCreate;
 		}
-		public Person Update(Person person)
+		public PersonVO Update(PersonVO person)
 		{
-			return _repository.Update(person);
+			var personEntity = _converter.Parse(person);
+			personEntity = _repository.Update(personEntity);
+
+			var covertedUpdate = _converter.Parse(personEntity);
+
+			return covertedUpdate;
 		}
 
 		public void Delete(long id)
