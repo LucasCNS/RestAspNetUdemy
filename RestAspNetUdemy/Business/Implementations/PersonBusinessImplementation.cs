@@ -1,6 +1,5 @@
 ﻿using RestAspNetUdemy.Model;
 using RestAspNetUdemy.Repository;
-using RestAspNetUdemy.Repository.Generic;
 
 namespace RestAspNetUdemy.Business.Implementations
 {

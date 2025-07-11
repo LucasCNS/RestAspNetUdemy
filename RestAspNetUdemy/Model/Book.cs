@@ -1,13 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using RestAspNetUdemy.Model.Base;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RestAspNetUdemy.Model
 {
 	[Table("books")]
-	public class Book
+	public class Book : BaseEntity
 	{
-		[Column("id")]
-		public int Id { get; set; }
-
 		[Column("author")]
 		public string Author { get; set; }
 
