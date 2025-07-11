@@ -33,7 +33,7 @@ namespace RestAspNetUdemy.Repository.Generic
 			{
 				dataset.Add(item);
 				_context.SaveChanges();
-				
+
 				return item;
 			}
 			catch (Exception ex)
@@ -52,7 +52,7 @@ namespace RestAspNetUdemy.Repository.Generic
 				{
 					_context.Entry(result).CurrentValues.SetValues(item);
 					_context.SaveChanges();
-					
+
 					return item;
 				}
 				catch (Exception)
@@ -60,7 +60,7 @@ namespace RestAspNetUdemy.Repository.Generic
 					throw;
 				}
 			}
-			else 
+			else
 			{
 				return null;
 			}
