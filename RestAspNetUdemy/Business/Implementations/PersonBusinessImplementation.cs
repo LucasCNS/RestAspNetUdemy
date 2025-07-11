@@ -1,5 +1,6 @@
 ﻿using RestAspNetUdemy.Model;
 using RestAspNetUdemy.Repository;
+using RestAspNetUdemy.Repository.Generic;
 
 namespace RestAspNetUdemy.Business.Implementations
 {
@@ -11,6 +12,7 @@ namespace RestAspNetUdemy.Business.Implementations
 		{
 			_repository = repository;
 		}
+
 		public List<Person> FindAll()
 		{
 			return _repository.FindAll();
@@ -34,6 +36,5 @@ namespace RestAspNetUdemy.Business.Implementations
 		{
 			_repository.Delete(id);
 		}
-
 	}
 }

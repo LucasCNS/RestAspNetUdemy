@@ -1,15 +1,14 @@
-﻿using RestAspNetUdemy.Model;
+﻿using RestAspNetUdemy.Model.Base;
 
 namespace RestAspNetUdemy.Repository
 {
-	public interface IPersonRepository
+	public interface IRepository<T> where T : BaseEntity
 	{
-		List<Person> FindAll();
-		Person FindById(long id);
-		Person Create(Person person);
-		Person Update(Person person);
+		List<T> FindAll();
+		T FindById(long id);
+		T Create(T item);
+		T Update(T item);
 		void Delete(long id);
-
 		bool Exists(long id);
 	}
 }

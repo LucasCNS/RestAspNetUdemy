@@ -1,9 +1,13 @@
+using EvolveDb;
 using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 using RestAspNetUdemy.Business;
 using RestAspNetUdemy.Business.Implementations;
 using RestAspNetUdemy.Model.Context;
 using RestAspNetUdemy.Repository;
+using RestAspNetUdemy.Repository.Generic;
 using RestAspNetUdemy.Repository.Implementations;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,11 +21,18 @@ builder.Services.AddDbContext<MySQLContext>(
 		new MySqlServerVersion(new Version(9, 0, 5)))
 );
 
+if (builder.Environment.IsDevelopment())
+{
+	MigrateDatabase(connection);
+}
+
 // Versioning API
 builder.Services.AddApiVersioning();
 
 builder.Services.AddScoped<IPersonRepository, PersonRepositoryImplementation>();
 builder.Services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
+builder.Services.AddScoped<IBookRepository, BookRepositoryImplementation>();
+builder.Services.AddScoped<IBookBusiness, BookBusinessImplementation>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -43,3 +54,22 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+void MigrateDatabase(string connection)
+{
+	try
+	{
+		var evolveConnection = new MySqlConnection(connection);
+		var evolve = new Evolve(evolveConnection, Log.Information)
+		{
+			Locations = new List<string> { "db/migrations", "db/dataset" },
+			IsEraseDisabled = true,
+		};
+		evolve.Migrate();
+	}
+	catch (Exception ex)
+	{
+		Log.Error("Database migration failed", ex);
+		throw;
+	}
+}
