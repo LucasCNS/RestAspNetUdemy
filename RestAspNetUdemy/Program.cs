@@ -1,13 +1,12 @@
 using EvolveDb;
-using Microsoft.EntityFrameworkCore;
+using Serilog;
 using MySqlConnector;
+using Microsoft.EntityFrameworkCore;
 using RestAspNetUdemy.Business;
 using RestAspNetUdemy.Business.Implementations;
 using RestAspNetUdemy.Model.Context;
 using RestAspNetUdemy.Repository;
 using RestAspNetUdemy.Repository.Generic;
-using RestAspNetUdemy.Repository.Implementations;
-using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +28,6 @@ if (builder.Environment.IsDevelopment())
 // Versioning API
 builder.Services.AddApiVersioning();
 
-builder.Services.AddScoped<IPersonRepository, PersonRepositoryImplementation>();
 builder.Services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
 builder.Services.AddScoped<IBookBusiness, BookBusinessImplementation>();
 
