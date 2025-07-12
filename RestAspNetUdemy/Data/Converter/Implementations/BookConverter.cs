@@ -17,7 +17,7 @@ namespace RestAspNetUdemy.Data.Converter.Implementations
 				Price = origin.Price,
 				Title = origin.Title,
 			};
-		}
+		} 
 
 		public List<Book> Parse(List<BookVO> origin)
 		{

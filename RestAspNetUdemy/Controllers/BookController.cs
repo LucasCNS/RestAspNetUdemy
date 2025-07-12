@@ -36,7 +36,7 @@ namespace RestAspNetUdemy.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult PostOuCreate([FromBody] Book book)
+		public IActionResult PostOuCreate([FromBody] BookVO book)
 		{
 			if (book == null) return BadRequest();
 
@@ -44,7 +44,7 @@ namespace RestAspNetUdemy.Controllers
 		}
 
 		[HttpPut]
-		public IActionResult PutOuUpdate([FromBody] Book book)
+		public IActionResult PutOuUpdate([FromBody] BookVO book)
 		{
 			if (book == null) return BadRequest();
 

@@ -4,10 +4,10 @@ namespace RestAspNetUdemy.Business
 {
 	public interface IBookBusiness
 	{
-		List<Book> FindAll();
-		Book FindById(int id);
-		Book Create(Book book);
-		Book Update(Book book);
+		List<BookVO> FindAll();
+		BookVO FindById(int id);
+		BookVO Create(BookVO book);
+		BookVO Update(BookVO book);
 		void Delete(int id);
 	}
 }

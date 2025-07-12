@@ -36,7 +36,7 @@ namespace RestAspNetUdemy.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult PostOuCreate([FromBody] Person person)
+		public IActionResult PostOuCreate([FromBody] PersonVO person)
 		{
 			if (person == null) return BadRequest();
 
@@ -44,7 +44,7 @@ namespace RestAspNetUdemy.Controllers
 		}
 
 		[HttpPut]
-		public IActionResult PutOuUpdate([FromBody] Person person)
+		public IActionResult PutOuUpdate([FromBody] PersonVO person)
 		{
 			if (person == null) return BadRequest();
 

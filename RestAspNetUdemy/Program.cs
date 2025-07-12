@@ -7,6 +7,7 @@ using RestAspNetUdemy.Business.Implementations;
 using RestAspNetUdemy.Model.Context;
 using RestAspNetUdemy.Repository;
 using RestAspNetUdemy.Repository.Generic;
+using Microsoft.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,14 @@ if (builder.Environment.IsDevelopment())
 {
 	MigrateDatabase(connection);
 }
+
+builder.Services.AddMvc(options =>
+{
+	options.RespectBrowserAcceptHeader = true;
+
+	options.FormatterMappings.SetMediaTypeMappingForFormat("xml", MediaTypeHeaderValue.Parse("application/xml"));
+	options.FormatterMappings.SetMediaTypeMappingForFormat("json", MediaTypeHeaderValue.Parse("application/json"));
+}).AddXmlSerializerFormatters();
 
 // Versioning API
 builder.Services.AddApiVersioning();
