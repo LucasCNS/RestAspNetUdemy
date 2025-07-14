@@ -54,7 +54,7 @@ namespace RestAspNetUdemy.Hypermedia.Enricher
 			lock (_lock)
 			{
 				var url = new { controller = path, id = id };
-				return new StringBuilder(urlHelper.Link("DefaultApi", url)).Replate("%2F", "/").ToString();
+				return new StringBuilder(urlHelper.Link("DefaultApi", url)).Replace("%2F", "/").ToString();
 			}
 		}
 	}
