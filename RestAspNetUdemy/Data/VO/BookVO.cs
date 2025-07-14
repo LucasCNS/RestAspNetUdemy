@@ -1,6 +1,9 @@
-﻿namespace RestAspNetUdemy.Model
+﻿using RestAspNetUdemy.Hypermedia;
+using RestAspNetUdemy.Hypermedia.Abstract;
+
+namespace RestAspNetUdemy.Model
 {
-	public class BookVO
+	public class BookVO : ISupportsHyperMedia
 	{
 		public long Id { get; set; }
 
@@ -11,5 +14,7 @@
 		public decimal Price { get; set; }
 
 		public string? Title { get; set; }
+
+		public List<HyperMediaLink> Links { get; set; } = new List<HyperMediaLink>();
 	}
 }
