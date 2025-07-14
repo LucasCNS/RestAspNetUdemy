@@ -8,6 +8,8 @@ using RestAspNetUdemy.Model.Context;
 using RestAspNetUdemy.Repository;
 using RestAspNetUdemy.Repository.Generic;
 using Microsoft.Net.Http.Headers;
+using RestAspNetUdemy.Hypermedia.Filters;
+using RestAspNetUdemy.Hypermedia.Enricher;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +35,12 @@ builder.Services.AddMvc(options =>
 	options.FormatterMappings.SetMediaTypeMappingForFormat("xml", MediaTypeHeaderValue.Parse("application/xml"));
 	options.FormatterMappings.SetMediaTypeMappingForFormat("json", MediaTypeHeaderValue.Parse("application/json"));
 }).AddXmlSerializerFormatters();
+
+var filterOptions = new HyperMediaFilterOptions();
+
+filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
+
+builder.Services.AddSingleton(filterOptions);
 
 // Versioning API
 builder.Services.AddApiVersioning();
@@ -60,6 +68,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapControllerRoute("DefaultApi", "{controller=values}/{id?}");
 
 app.Run();
 
