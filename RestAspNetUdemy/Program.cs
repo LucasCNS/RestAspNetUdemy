@@ -1,15 +1,14 @@
 using EvolveDb;
-using Serilog;
-using MySqlConnector;
 using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 using RestAspNetUdemy.Business;
 using RestAspNetUdemy.Business.Implementations;
+using RestAspNetUdemy.Hypermedia.Enricher;
+using RestAspNetUdemy.Hypermedia.Filters;
 using RestAspNetUdemy.Model.Context;
 using RestAspNetUdemy.Repository;
 using RestAspNetUdemy.Repository.Generic;
-using Microsoft.Net.Http.Headers;
-using RestAspNetUdemy.Hypermedia.Filters;
-using RestAspNetUdemy.Hypermedia.Enricher;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,17 +27,18 @@ if (builder.Environment.IsDevelopment())
 	MigrateDatabase(connection);
 }
 
-builder.Services.AddMvc(options =>
-{
-	options.RespectBrowserAcceptHeader = true;
+//builder.Services.AddMvc(options =>
+//{
+//	options.RespectBrowserAcceptHeader = true;
 
-	options.FormatterMappings.SetMediaTypeMappingForFormat("xml", MediaTypeHeaderValue.Parse("application/xml"));
-	options.FormatterMappings.SetMediaTypeMappingForFormat("json", MediaTypeHeaderValue.Parse("application/json"));
-}).AddXmlSerializerFormatters();
+//	options.FormatterMappings.SetMediaTypeMappingForFormat("json", MediaTypeHeaderValue.Parse("application/json"));
+//	options.FormatterMappings.SetMediaTypeMappingForFormat("xml", MediaTypeHeaderValue.Parse("application/xml"));
+//}).AddXmlSerializerFormatters();
 
 var filterOptions = new HyperMediaFilterOptions();
 
 filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
+filterOptions.ContentResponseEnricherList.Add(new BookEnricher());
 
 builder.Services.AddSingleton(filterOptions);
 
@@ -68,7 +68,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapControllerRoute("DefaultApi", "{controller=values}/{id?}");
+app.MapControllerRoute("DefaultApi", "{controller=values}/v{version=apiVersion}/{id?}");
 
 app.Run();
 
