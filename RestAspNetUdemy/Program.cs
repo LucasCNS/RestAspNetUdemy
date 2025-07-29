@@ -1,5 +1,8 @@
 using EvolveDb;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Models;
 using MySqlConnector;
 using RestAspNetUdemy.Business;
 using RestAspNetUdemy.Business.Implementations;
@@ -22,18 +25,32 @@ builder.Services.AddDbContext<MySQLContext>(
 		new MySqlServerVersion(new Version(9, 0, 5)))
 );
 
+var mysqlConnectionTemplate = builder.Configuration["MySQLConnection:MySQLConnectionString"];
+if (string.IsNullOrEmpty(mysqlConnectionTemplate))
+	throw new Exception("Configuração MySQLConnection:MySQLConnectionString não encontrada no appsettings.json!");
+
+var mysqlPassword = Environment.GetEnvironmentVariable("MYSQL_PASSWORD");
+if (string.IsNullOrEmpty(mysqlPassword))
+	throw new Exception("Variável de ambiente MYSQL_PASSWORD não definida!");
+
+var mysqlConnectionString = mysqlConnectionTemplate.Replace("__MYSQL_PASSWORD__", mysqlPassword)
+												  + ";AllowPublicKeyRetrieval=True;SslMode=None;";
+builder.Services.AddDbContext<MySQLContext>(options =>
+	options.UseMySql(mysqlConnectionString,
+		new MySqlServerVersion(new Version(9, 4, 0))));
+
 if (builder.Environment.IsDevelopment())
 {
 	MigrateDatabase(connection);
 }
 
-//builder.Services.AddMvc(options =>
-//{
-//	options.RespectBrowserAcceptHeader = true;
+builder.Services.AddMvc(options =>
+{
+	options.RespectBrowserAcceptHeader = true;
 
-//	options.FormatterMappings.SetMediaTypeMappingForFormat("json", MediaTypeHeaderValue.Parse("application/json"));
-//	options.FormatterMappings.SetMediaTypeMappingForFormat("xml", MediaTypeHeaderValue.Parse("application/xml"));
-//}).AddXmlSerializerFormatters();
+	options.FormatterMappings.SetMediaTypeMappingForFormat("json", MediaTypeHeaderValue.Parse("application/json"));
+	options.FormatterMappings.SetMediaTypeMappingForFormat("xml", MediaTypeHeaderValue.Parse("application/xml"));
+}).AddXmlSerializerFormatters();
 
 var filterOptions = new HyperMediaFilterOptions();
 
@@ -41,6 +58,9 @@ filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
 filterOptions.ContentResponseEnricherList.Add(new BookEnricher());
 
 builder.Services.AddSingleton(filterOptions);
+
+builder.Services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
+builder.Services.AddScoped<IBookBusiness, BookBusinessImplementation>();
 
 // Versioning API
 builder.Services.AddApiVersioning();
