@@ -14,24 +14,40 @@ using RestAspNetUdemy.Repository.Generic;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+var appName = "REST API's RESTful from 0 to Azure with ASP.NET Core 8 and Docker";
+var appVersion = "v1";
+var appDescription = $"REST API RESTful developed in course '{appName}'";
+
 
 // Add services to the container.
 
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddControllers();
 
-var connection = builder.Configuration["MySQLConnection:MySQLConnectionString"];
-builder.Services.AddDbContext<MySQLContext>(
-	options => options.UseMySql(connection,
-		new MySqlServerVersion(new Version(9, 0, 5)))
-);
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+	c.SwaggerDoc(appVersion,
+		new OpenApiInfo
+		{
+			Title = appName,
+			Version = appVersion,
+			Description = appDescription,
+			Contact = new OpenApiContact
+			{
+				Name = "Leandro Costa",
+				Url = new Uri("https://pub.erudio.com.br/meus-cursos")
+			}
+		});
+});
 
 var mysqlConnectionTemplate = builder.Configuration["MySQLConnection:MySQLConnectionString"];
 if (string.IsNullOrEmpty(mysqlConnectionTemplate))
-	throw new Exception("Configura√ß√£o MySQLConnection:MySQLConnectionString n√£o encontrada no appsettings.json!");
+	throw new Exception("ConfiguraÁ„o MySQLConnection:MySQLConnectionString n„o encontrada no appsettings.json!");
 
 var mysqlPassword = Environment.GetEnvironmentVariable("MYSQL_PASSWORD");
 if (string.IsNullOrEmpty(mysqlPassword))
-	throw new Exception("Vari√°vel de ambiente MYSQL_PASSWORD n√£o definida!");
+	throw new Exception("Vari·vel de ambiente MYSQL_PASSWORD n„o definida!");
 
 var mysqlConnectionString = mysqlConnectionTemplate.Replace("__MYSQL_PASSWORD__", mysqlPassword)
 												  + ";AllowPublicKeyRetrieval=True;SslMode=None;";
@@ -41,7 +57,7 @@ builder.Services.AddDbContext<MySQLContext>(options =>
 
 if (builder.Environment.IsDevelopment())
 {
-	MigrateDatabase(connection);
+	MigrateDatabase(mysqlConnectionString);
 }
 
 builder.Services.AddMvc(options =>
@@ -65,9 +81,6 @@ builder.Services.AddScoped<IBookBusiness, BookBusinessImplementation>();
 // Versioning API
 builder.Services.AddApiVersioning();
 
-builder.Services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
-builder.Services.AddScoped<IBookBusiness, BookBusinessImplementation>();
-
 builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -76,14 +89,19 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-	app.UseSwagger();
-	app.UseSwaggerUI();
-}
-
 app.UseHttpsRedirection();
+
+app.UseSwagger();
+
+app.UseSwaggerUI(c =>
+{
+	c.SwaggerEndpoint("/swagger/v1/swagger.json",
+	$"{appName} - {appVersion}");
+});
+
+var option = new RewriteOptions();
+option.AddRedirect("^$", "swagger");
+app.UseRewriter(option);
 
 app.UseAuthorization();
 

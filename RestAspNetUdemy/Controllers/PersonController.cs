@@ -8,7 +8,7 @@ namespace RestAspNetUdemy.Controllers
 {
 	[ApiVersion("1")]
 	[ApiController]
-	[Route("swagger/api/[controller]/v{version:apiVersion}")]
+	[Route("api/[controller]/v{version:apiVersion}")]
 	public class PersonController : ControllerBase
 	{
 		private readonly ILogger<PersonController> _logger;
