@@ -1,6 +1,10 @@
 using EvolveDb;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using MySqlConnector;
@@ -11,7 +15,14 @@ using RestAspNetUdemy.Hypermedia.Filters;
 using RestAspNetUdemy.Model.Context;
 using RestAspNetUdemy.Repository;
 using RestAspNetUdemy.Repository.Generic;
+using RestAspNetUdemy.Services.Implementation;
+using RestWithASPNETUdemy.Business;
+using RestWithASPNETUdemy.Business.Implementations;
+using RestWithASPNETUdemy.Configurations;
+using RestWithASPNETUdemy.Repository;
+using RestWithASPNETUdemy.Services;
 using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var appName = "REST API's RESTful from 0 to Azure with ASP.NET Core 8 and Docker";
@@ -19,6 +30,41 @@ var appVersion = "v1";
 var appDescription = $"REST API RESTful developed in course '{appName}'";
 
 // Add services to the container.
+
+var tokenConfigurations = new TokenConfiguration();
+
+new ConfigureFromConfigurationOptions<TokenConfiguration>(
+		builder.Configuration.GetSection("TokenConfigurations")
+	)
+	.Configure(tokenConfigurations);
+
+builder.Services.AddSingleton(tokenConfigurations);
+
+builder.Services.AddAuthentication(options =>
+{
+	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+	options.TokenValidationParameters = new TokenValidationParameters
+	{
+		ValidateIssuer = true,
+		ValidateAudience = true,
+		ValidateLifetime = true,
+		ValidateIssuerSigningKey = true,
+		ValidIssuer = tokenConfigurations.Issuer,
+		ValidAudience = tokenConfigurations.Audience,
+		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenConfigurations.Secret))
+	};
+});
+
+builder.Services.AddAuthorization(auth =>
+{
+	auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+		.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+		.RequireAuthenticatedUser().Build());
+});
 
 builder.Services.AddCors(options => options.AddDefaultPolicy(builder =>
 {
@@ -56,7 +102,7 @@ if (string.IsNullOrEmpty(mysqlPassword))
 	throw new Exception("Variável de ambiente MYSQL_PASSWORD não definida!");
 
 var mysqlConnectionString = mysqlConnectionTemplate.Replace("__MYSQL_PASSWORD__", mysqlPassword)
-												  + ";AllowPublicKeyRetrieval=True;SslMode=None;";
+												  + ";AllowPublicKeyRetrieval=True;SslMode=Preferred;";
 builder.Services.AddDbContext<MySQLContext>(options =>
 	options.UseMySql(mysqlConnectionString,
 		new MySqlServerVersion(new Version(9, 4, 0))));
@@ -83,6 +129,10 @@ builder.Services.AddSingleton(filterOptions);
 
 builder.Services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
 builder.Services.AddScoped<IBookBusiness, BookBusinessImplementation>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddTransient<ILoginBusiness, LoginBusinessImplementation>();
+builder.Services.AddTransient<ITokenService, TokenService>();
 
 // Versioning API
 builder.Services.AddApiVersioning();
