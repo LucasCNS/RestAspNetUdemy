@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestAspNetUdemy.Business;
 using RestAspNetUdemy.Hypermedia.Filters;
@@ -8,6 +9,7 @@ namespace RestAspNetUdemy.Controllers
 {
 	[ApiVersion("1")]
 	[ApiController]
+	[Authorize("Bearer")]
 	[Route("api/[controller]/v{version:apiVersion}")]
 	public class PersonController : ControllerBase
 	{
