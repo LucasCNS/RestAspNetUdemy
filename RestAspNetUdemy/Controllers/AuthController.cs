@@ -1,7 +1,7 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestAspNetUdemy.Data.VO;
-using RestAspNetUdemy.Model;
 using RestWithASPNETUdemy.Business;
 using RestWithASPNETUdemy.Data.VO;
 
@@ -40,6 +40,18 @@ namespace RestAspNetUdemy.Controllers
 
 			if (token == null) return BadRequest("Invalid client request");
 			return Ok(token);
+		}
+
+		[HttpGet]
+		[Route("revoke")]
+		[Authorize("Bearer")]
+		public IActionResult Revoke()
+		{
+			var username = User.Identity.Name;
+			var result = _loginBusiness.RevokeToken(username);
+
+			if (!result) return BadRequest("Invalid client request");
+			return NoContent();
 		}
 	}
 }

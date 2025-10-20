@@ -62,7 +62,7 @@ namespace RestWithASPNETUdemy.Business.Implementations
 
 			var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
 
-			var username = principal.Identity.Name;
+			var username = principal?.Identity?.Name;
 
 			var user = _repository.ValidateCredentials(username);
 
