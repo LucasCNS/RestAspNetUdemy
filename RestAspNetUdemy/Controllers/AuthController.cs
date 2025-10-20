@@ -1,8 +1,9 @@
 ﻿using Asp.Versioning;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestAspNetUdemy.Data.VO;
+using RestAspNetUdemy.Model;
 using RestWithASPNETUdemy.Business;
+using RestWithASPNETUdemy.Data.VO;
 
 namespace RestAspNetUdemy.Controllers
 {
@@ -27,6 +28,17 @@ namespace RestAspNetUdemy.Controllers
 			var token = _loginBusiness.ValidateCredentials(user);
 
 			if (token == null) return Unauthorized();
+			return Ok(token);
+		}
+
+		[HttpPost]
+		[Route("refresh")]
+		public IActionResult Refresh([FromBody] TokenVO tokenVo)
+		{
+			if (tokenVo is null) return BadRequest("Invalid client request");
+			var token = _loginBusiness.ValidateCredentials(tokenVo);
+
+			if (token == null) return BadRequest("Invalid client request");
 			return Ok(token);
 		}
 	}
