@@ -58,6 +58,16 @@ namespace RestAspNetUdemy.Controllers
 			return Ok(_personBusiness.Update(person));
 		}
 
+		[HttpPatch("{id}")]
+		[TypeFilter(typeof(HyperMediaFilter))]
+		public IActionResult Patch(long id)
+		{
+			var person = _personBusiness.Disable(id);
+			if (person == null) return NotFound();
+
+			return Ok(person);
+		}
+
 		[HttpDelete("{id}")]
 		public IActionResult Delete(long id)
 		{

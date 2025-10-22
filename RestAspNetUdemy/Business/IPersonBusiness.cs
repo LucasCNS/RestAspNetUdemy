@@ -8,6 +8,7 @@ namespace RestAspNetUdemy.Business
 		PersonVO FindById(long id);
 		PersonVO Create(PersonVO person);
 		PersonVO Update(PersonVO person);
+		PersonVO Disable(long id);
 		void Delete(long id);
 	}
 }

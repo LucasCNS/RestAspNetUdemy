@@ -1,15 +1,15 @@
 ﻿using RestAspNetUdemy.Data.Converter.Implementations;
 using RestAspNetUdemy.Model;
-using RestAspNetUdemy.Repository;
+using RestWithASPNETUdemy.Repository;
 
 namespace RestAspNetUdemy.Business.Implementations
 {
 	public class PersonBusinessImplementation : IPersonBusiness
 	{
-		private readonly IRepository<Person> _repository;
+		private readonly IPersonRepository _repository;
 		private readonly PersonConverter _converter;
 
-		public PersonBusinessImplementation(IRepository<Person> repository)
+		public PersonBusinessImplementation(IPersonRepository repository)
 		{
 			_repository = repository;
 			_converter = new PersonConverter();
@@ -31,26 +31,33 @@ namespace RestAspNetUdemy.Business.Implementations
 
 		public PersonVO Create(PersonVO person)
 		{
-			var personEntity = _converter.Parse(person);
-			personEntity = _repository.Create(personEntity);
 
-			var covertedCreate = _converter.Parse(personEntity);
-
-			return covertedCreate;
+			return Convert(person, _repository.Create);
 		}
+
 		public PersonVO Update(PersonVO person)
 		{
-			var personEntity = _converter.Parse(person);
-			personEntity = _repository.Update(personEntity);
+			return Convert(person, _repository.Update);
+		}
 
-			var covertedUpdate = _converter.Parse(personEntity);
-
-			return covertedUpdate;
+		public PersonVO Disable(long id)
+		{
+			var personEntity = _repository.Disable(id);
+			return _converter.Parse(personEntity);
 		}
 
 		public void Delete(long id)
 		{
 			_repository.Delete(id);
+		}
+
+		private PersonVO Convert(PersonVO person, Func<Person, Person> repositoryAction)
+		{
+			var personEntity = _converter.Parse(person);
+			var resultEntity = repositoryAction(personEntity);
+
+			var convertedMethod = _converter.Parse(personEntity);
+			return convertedMethod;
 		}
 	}
 }
