@@ -6,6 +6,7 @@ namespace RestAspNetUdemy.Business
 	{
 		List<PersonVO> FindAll();
 		PersonVO FindById(long id);
+		PersonVO FindByName(string firstName, string lastName);
 		PersonVO Create(PersonVO person);
 		PersonVO Update(PersonVO person);
 		PersonVO Disable(long id);

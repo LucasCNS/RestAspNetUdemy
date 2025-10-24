@@ -22,12 +22,34 @@ namespace RestAspNetUdemy.Repository
 					_context.Entry(user).CurrentValues.SetValues(user);
 					_context.SaveChanges();
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
 					throw;
 				}
 			}
 			return user;
+		}
+
+		public List<Person> FindByName(string firstName, string lastName)
+		{
+			if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
+			{
+				return _context.People.Where(p =>
+				p.FirstName.Contains(firstName)
+				&& p.LastName.Contains(lastName)).ToList();
+			}
+			else if (!string.IsNullOrWhiteSpace(firstName) && string.IsNullOrWhiteSpace(lastName))
+			{
+				return _context.People.Where(p =>
+				p.FirstName.Contains(firstName)).ToList();
+			}
+			else if (string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
+			{
+				return _context.People.Where(p =>
+				p.LastName.Contains(lastName)).ToList();
+			}
+
+			return null;
 		}
 	}
 }
