@@ -24,9 +24,12 @@ namespace RestAspNetUdemy.Business.Implementations
 
 		public PersonVO FindById(long id)
 		{
-			var convertedFindById = _converter.Parse(_repository.FindById(id));
+			return _converter.Parse(_repository.FindById(id));
+		}
 
-			return convertedFindById;
+		public List<PersonVO> FindByName(string firstName, string lastName)
+		{
+			return _converter.Parse(_repository.FindByName(firstName, lastName));
 		}
 
 		public PersonVO Create(PersonVO person)
