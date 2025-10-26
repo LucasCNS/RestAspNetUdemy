@@ -42,7 +42,7 @@ namespace RestAspNetUdemy.Controllers
 
 		[HttpGet("findPersonByName")]
 		[TypeFilter(typeof(HyperMediaFilter))]
-		public IActionResult Get([FromQuery] string firstName, [FromQuery] string lastName)
+		public IActionResult Get([FromQuery] string? firstName, [FromQuery] string? lastName)
 		{
 			var person = _personBusiness.FindByName(firstName, lastName);
 			if (person == null) return NotFound();
