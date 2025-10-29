@@ -22,11 +22,12 @@ namespace RestAspNetUdemy.Controllers
 			_personBusiness = personBusiness;
 		}
 
-		[HttpGet]
+		[HttpGet("{sortDirection}/{pageSize}/{page}")]
 		[TypeFilter(typeof(HyperMediaFilter))]
-		public IActionResult Get()
+		public IActionResult Get([FromQuery] string name, string sortDirection, int pageSize, int page)
 		{
-			var people = _personBusiness.FindAll();
+			var people = _personBusiness.FindWithPagedSearch(name, sortDirection, pageSize,page);
+			
 			return Ok(people);
 		}
 

@@ -1,4 +1,5 @@
-﻿using RestAspNetUdemy.Model;
+﻿using RestAspNetUdemy.Hypermedia.Utils;
+using RestAspNetUdemy.Model;
 
 namespace RestAspNetUdemy.Business
 {
@@ -7,6 +8,7 @@ namespace RestAspNetUdemy.Business
 		List<PersonVO> FindAll();
 		PersonVO FindById(long id);
 		List<PersonVO> FindByName(string firstName, string lastName);
+		PagedSearchVO<PersonVO> FindWithPagedSearch(string name, string sortDirection, int pageSize, int page);
 		PersonVO Create(PersonVO person);
 		PersonVO Update(PersonVO person);
 		PersonVO Disable(long id);
