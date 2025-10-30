@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
@@ -126,15 +127,18 @@ filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
 filterOptions.ContentResponseEnricherList.Add(new BookEnricher());
 
 builder.Services.AddSingleton(filterOptions);
+builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
 builder.Services.AddScoped<IBookBusiness, BookBusinessImplementation>();
+builder.Services.AddScoped<IFileBusiness, FileBusinessImplementation>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
 builder.Services.AddTransient<ILoginBusiness, LoginBusinessImplementation>();
 builder.Services.AddTransient<ITokenService, TokenService>();
+
 
 // Versioning API
 builder.Services.AddApiVersioning();
