@@ -18,12 +18,33 @@ namespace RestAspNetUdemy.Business.Implementations
 			throw new NotImplementedException();
 		}
 
-		public Task<List<FileDetailVO>> SaveFilesToDisk(IFormFile file)
+		public async Task<FileDetailVO> SaveFileToDiskAsync(IFormFile file)
 		{
-			throw new NotImplementedException();
+			FileDetailVO fileDetail = new FileDetailVO();
+
+			var documentType = Path.GetExtension(file.FileName);
+			var baseUrl = _context.HttpContext.Request.Host;
+
+			if (documentType.ToLower() == ".pdf" || documentType.ToLower() == ".png" ||
+				documentType.ToLower() == ".jpg" || documentType.ToLower() == ".jpeg")
+			{
+				var documentName = Path.GetFileName(file.FileName);
+				if (file != null && file.Length > 0)
+				{
+					var destination = Path.Combine(_basePath, "", documentName);
+					fileDetail.DocumentName = documentName;
+					fileDetail.DocumentType = documentType;
+					fileDetail.DocumentUrl = Path.Combine(baseUrl + "/api/file/v1" + fileDetail.DocumentName);
+
+					using var stream = new FileStream(destination, FileMode.Create);
+					await file.CopyToAsync(stream);
+
+				}
+			}
+			return fileDetail;
 		}
 
-		public Task<FileDetailVO> SaveFileToDisk(IFormFile file)
+		public Task<List<FileDetailVO>> SaveFilesToDisk(IFormFile file)
 		{
 			throw new NotImplementedException();
 		}
