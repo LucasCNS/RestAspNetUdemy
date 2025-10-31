@@ -23,7 +23,7 @@ namespace RestAspNetUdemy.Business.Implementations
 			FileDetailVO fileDetail = new FileDetailVO();
 
 			var documentType = Path.GetExtension(file.FileName);
-			var baseUrl = _context.HttpContext.Request.Host;
+			var baseUrl = _context?.HttpContext?.Request.Host;
 
 			if (documentType.ToLower() == ".pdf" || documentType.ToLower() == ".png" ||
 				documentType.ToLower() == ".jpg" || documentType.ToLower() == ".jpeg")
@@ -43,9 +43,16 @@ namespace RestAspNetUdemy.Business.Implementations
 			return fileDetail;
 		}
 
-		public Task<List<FileDetailVO>> SaveFilesToDisk(IFormFile file)
+		public async Task<List<FileDetailVO>> SaveFilesToDiskAsync(IList<IFormFile> files)
 		{
-			throw new NotImplementedException();
+			List<FileDetailVO> list = new List<FileDetailVO>();
+
+			foreach (var file in files)
+			{
+				list.Add(await SaveFileToDiskAsync(file));
+			}
+
+			return list;
 		}
 	}
 }

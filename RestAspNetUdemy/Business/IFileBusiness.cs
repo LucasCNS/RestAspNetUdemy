@@ -6,7 +6,6 @@ namespace RestAspNetUdemy.Business
 	{
 		public byte[] GetFile(string filename);
 		public Task<FileDetailVO> SaveFileToDiskAsync(IFormFile file);
-		public Task<List<FileDetailVO>> SaveFilesToDisk(IFormFile file);
-
+		public Task<List<FileDetailVO>> SaveFilesToDiskAsync(IList<IFormFile> file);
 	}
 }

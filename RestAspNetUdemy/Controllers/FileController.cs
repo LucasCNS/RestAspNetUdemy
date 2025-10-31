@@ -25,5 +25,12 @@ namespace RestAspNetUdemy.Controllers
 			FileDetailVO detail = await _fileBusiness.SaveFileToDiskAsync(file);
 			return new OkObjectResult(detail);
 		}
+
+		[HttpPost("uploadMultipleFiles")]
+		public async Task<IActionResult> UploadMultiplesFileAsync(List<IFormFile> files)
+		{
+			List<FileDetailVO> details = await _fileBusiness.SaveFilesToDiskAsync(files);
+			return new OkObjectResult(details);
+		}
 	}
 }
