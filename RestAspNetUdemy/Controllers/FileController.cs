@@ -32,5 +32,20 @@ namespace RestAspNetUdemy.Controllers
 			List<FileDetailVO> details = await _fileBusiness.SaveFilesToDiskAsync(files);
 			return new OkObjectResult(details);
 		}
+
+		[HttpGet("downloadFile/{fileName}")]
+		public async Task<IActionResult> GetFileAsync(string fileName)
+		{
+			byte[] buffer = _fileBusiness.GetFile(fileName);
+
+			if (buffer != null)
+			{
+				HttpContext.Response.ContentType = $"application/{Path.GetExtension(fileName).Replace(".", "")}";
+				HttpContext.Response.Headers.Add("content-length", buffer.Length.ToString());
+				await HttpContext.Response.Body.WriteAsync(buffer, 0, buffer.Length);	
+			}
+
+			return new ContentResult();
+		}
 	}
 }
