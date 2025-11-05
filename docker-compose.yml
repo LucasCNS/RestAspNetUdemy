@@ -1,0 +1,6 @@
+services:
+  restaspnetudemy:
+    image: ${DOCKER_REGISTRY-}restaspnetudemy
+    build:
+      context: .
+      dockerfile: RestAspNetUdemy/Dockerfile
